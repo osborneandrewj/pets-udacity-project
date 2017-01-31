@@ -5,10 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * Created by osbor on 1/13/2017.
+ * Created by osborne on 1/13/2017.
  */
 
-public class PetDbHelper extends SQLiteOpenHelper{
+class PetDbHelper extends SQLiteOpenHelper{
 
     /** Used to change the database version if the database schema changes */
     public static final int DATABASE_VERSION = 1;
