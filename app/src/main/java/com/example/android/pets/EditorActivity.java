@@ -171,6 +171,34 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         alertDialog.show();
     }
 
+    private void showDeleteConfirmationDialog() {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the positive and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.delete_dialog_msg);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // User clicked the "Delete" button, so delete the pet.
+                deletePet();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // User clicked the "Cancel" button, so dismiss the dialog
+                // and continue editing the pet
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
     @Override
     public void onBackPressed() {
         // If the pet hasn't changed, continue with handling back button press
@@ -284,6 +312,25 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     /**
+     * Deletes pet from database
+     */
+    private void deletePet() {
+        int numberOfPetsAffected = getContentResolver().delete(mCurrentPetUri, null, null);
+
+
+        // Show a toast message
+        String toastMessage;
+        if (numberOfPetsAffected == 1) {
+            toastMessage = getString(R.string.editor_delete_pet_successful);
+        } else {
+            toastMessage = getString(R.string.editor_delete_pet_failed);
+        }
+        Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT).show();
+        // exit the current activity
+        finish();
+    }
+
+    /**
      * Method to check if the user-entered fields are suitable for a database entry.
      *
      * @return
@@ -322,7 +369,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
-                // Do nothing for now
+                // Show the delete confirmation dialog
+                showDeleteConfirmationDialog();
                 return true;
             // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
